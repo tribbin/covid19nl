@@ -26,7 +26,7 @@
 				nlDate.setDate(nlDate.getDate()+12);
 				nlDateFormatted = nlDate.getFullYear() + "-" + (nlDate.getMonth()+1) + "-"+nlDate.getDate();
 				if(moment.deaths>0)
-					dataIT.push({x: dag+correctie, y: moment.deaths/(60.48), toolTipContent: "Italië: "+moment.deaths+" doden ("+moment.date+") --> prognose Nederland: " + parseInt(moment.deaths*(17.18/60.48)) + " (" + nlDateFormatted + ")" });
+					dataIT.push({x: dag+correctie, y: moment.deaths/(60.48), toolTipContent: "Italië: "+moment.deaths+" doden ("+moment.date+") --> prognose Nederland: " + parseInt(moment.deaths*(17.18/60.48)) + " doden (" + nlDateFormatted + ")" });
 				dag++;
 			}
 
