@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+	<head>  
+		<meta charset="UTF-8">
+		<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+		<script>
+	
+        	jQuery.getJSON("https://pomber.github.io/covid19/timeseries.json", function(data){
+                	maakGrafiek(data);
+        	});
+
+
+		function maakGrafiek(data) {
+
+			var dataNL = [];
+			var dataIT = [];
+
+			dag = 5;
+			for (var i=1; i<data["Netherlands"].length; i++) {
+				moment = data["Netherlands"][i];
+				if (moment.deaths>10) {
+					dataNL.push({x: dag++, y: moment.deaths/(17.18), toolTipContent: "Nederland: "+moment.deaths+" doden ("+moment.date+")"});
+				}
+			}
+			dag = 0;
+			for (var i=1; i<data["Italy"].length; i++) {
+				moment = data["Italy"][i];
+				if (moment.deaths>10) {
+					dataIT.push({x: dag++, y: moment.deaths/(60.48), toolTipContent: "Italië: "+moment.deaths+" doden ("+moment.date+")"});
+				}
+			}
+
+			var chart = new CanvasJS.Chart("chartContainer", {
+				animationEnabled: true,
+				title:{
+					text: "Totaal aantal Corona-doden per miljoen inwoners.",
+					fontSize: 30
+				},
+				axisX: {
+					minimum: 4,
+					title: "Start-momenten uitgelijnd.",
+					titleFontSize: 30
+				},
+				axisY: {
+					logarithmic: true,
+					includeZero: true,
+					labelFontSize: 20
+				},
+				legend:{
+					cursor: "pointer",
+					fontSize: 30,
+					itemclick: toggleDataSeries
+				},
+				toolTip:{
+					shared: true
+				},
+				data: [{
+					name: "Nederland",
+					type: "spline",
+					yValueFormatString: "#0",
+					showInLegend: true,
+					dataPoints: dataNL,
+				},
+				{
+					name: "Italië",
+					type: "spline",
+					yValueFormatString: "#0",
+					showInLegend: true,
+					dataPoints: dataIT,
+				}]
+			});
+			chart.render();
+
+			function toggleDataSeries(e){
+				if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+					e.dataSeries.visible = false;
+				}
+				else{
+					e.dataSeries.visible = true;
+				}
+				chart.render();
+			}
+		}
+		</script>
+	</head>
+	<body>
+		<div id="chartContainer" style="height: 800px; width: 800px;"></div>
+		<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+	</body>
+</html>
