@@ -17,33 +17,41 @@
 			var dataUK = [];
 			var dataUS = [];
 
-			dag = 5;
-			for (var i=1; i<data["Netherlands"].length; i++) {
-				moment = data["Netherlands"][i];
-				if (moment.deaths>10) {
-					dataNL.push({x: dag++, y: moment.deaths/(17.18), toolTipContent: "Nederland: "+moment.deaths+" doden ("+moment.date+")"});
-				}
-			}
-			dag = 0;
+			correctie = -45;
+
+			dag = 19;
 			for (var i=1; i<data["Italy"].length; i++) {
 				moment = data["Italy"][i];
-				if (moment.deaths>10) {
-					dataIT.push({x: dag++, y: moment.deaths/(60.48), toolTipContent: "Italië: "+moment.deaths+" doden ("+moment.date+")"});
-				}
+				nlDate = new Date(moment.date);
+				nlDate.setDate(nlDate.getDate()+12);
+				nlDateFormatted = nlDate.getFullYear() + "-" + (nlDate.getMonth()+1) + "-"+nlDate.getDate();
+				if(moment.deaths>0)
+					dataIT.push({x: dag+correctie, y: moment.deaths/(60.48), toolTipContent: "Italië: "+moment.deaths+" doden ("+moment.date+") --> prognose Nederland: " + parseInt(moment.deaths*(17.18/60.48)) + " (" + nlDateFormatted + ")" });
+				dag++;
 			}
-			dag = 1;
+
+			dag = 7;
+			for (var i=1; i<data["Netherlands"].length; i++) {
+				moment = data["Netherlands"][i];
+				if(moment.deaths>0)
+					dataNL.push({x: dag+correctie, y: moment.deaths/(17.18), toolTipContent: "Nederland: "+moment.deaths+" doden ("+moment.date+")"});
+				dag++;
+			}
+
+			dag = 3;
 			for (var i=1; i<data["United Kingdom"].length; i++) {
 				moment = data["United Kingdom"][i];
-				if (moment.deaths>10) {
-					dataUK.push({x: dag++, y: moment.deaths/(66.44), toolTipContent: "UK: "+moment.deaths+" doden ("+moment.date+")"});
-				}
+				if(moment.deaths>0)
+					dataUK.push({x: dag+correctie, y: moment.deaths/(66.44), toolTipContent: "UK: "+moment.deaths+" doden ("+moment.date+")"});
+				dag++;
 			}
-			dag = -12;
+
+			dag = 0;
 			for (var i=1; i<data["US"].length; i++) {
 				moment = data["US"][i];
-				if (moment.deaths>10) {
-					dataUS.push({x: dag++, y: moment.deaths/(327.2), toolTipContent: "USA: "+moment.deaths+" doden ("+moment.date+")"});
-				}
+				if(moment.deaths>0)
+					dataUS.push({x: dag+correctie, y: moment.deaths/(327.2), toolTipContent: "USA: "+moment.deaths+" doden ("+moment.date+")"});
+				dag++;
 			}
 
 			var chart = new CanvasJS.Chart("chartContainer", {
@@ -53,15 +61,20 @@
 					fontSize: 26
 				},
 				axisX: {
-					minimum: 4,
+					minimum: 5,
 					title: "Start-momenten uitgelijnd.",
+					includeZero: true,
+					labelFontSize: 20,
 					titleFontSize: 30
 				},
 				axisY: {
+					minimum: 0.1,
 					title: "doden per miljoen inwoners (logaritmisch)",
+					valueFormatString: "#0.0",
 					logarithmic: true,
 					includeZero: true,
 					labelFontSize: 20,
+					logarithmBase: 10,
 					titleFontSize: 20
 				},
 				legend:{
@@ -73,30 +86,34 @@
 					shared: true
 				},
 				data: [{
-					name: "Nederland",
-					type: "spline",
-					yValueFormatString: "#0",
-					showInLegend: true,
-					dataPoints: dataNL,
-				},
-				{
 					name: "Italië",
+					color: "green",
 					type: "spline",
-					yValueFormatString: "#0",
+					yValueFormatString: "##0",
 					showInLegend: true,
 					dataPoints: dataIT,
 				},
 				{
-					name: "UK",
+					name: "Nederland",
+					color: "orange",
 					type: "spline",
-					yValueFormatString: "#0",
+					yValueFormatString: "##0",
+					showInLegend: true,
+					dataPoints: dataNL,
+				},
+				{
+					name: "UK",
+					color: "darkblue",
+					type: "spline",
+					yValueFormatString: "##0",
 					showInLegend: true,
 					dataPoints: dataUK,
 				},
 				{
 					name: "USA",
+					color: "red",
 					type: "spline",
-					yValueFormatString: "#0",
+					yValueFormatString: "##0",
 					showInLegend: true,
 					dataPoints: dataUS,
 				}]
