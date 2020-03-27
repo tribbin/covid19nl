@@ -16,6 +16,8 @@
 			var dataIT = [];
 			var dataUK = [];
 			var dataUS = [];
+			var dataDE = [];
+			var dataCN = [];
 
 			correctie = -45;
 
@@ -51,6 +53,22 @@
 				moment = data["US"][i];
 				if(moment.deaths>0)
 					dataUS.push({x: dag+correctie, y: moment.deaths/(327.2), toolTipContent: "USA: "+moment.deaths+" doden ("+moment.date+")"});
+				dag++;
+			}
+
+			dag = -1;
+			for (var i=1; i<data["Germany"].length; i++) {
+				moment = data["Germany"][i];
+				if(moment.deaths>0)
+					dataDE.push({x: dag+correctie, y: moment.deaths/(82.79), toolTipContent: "Duitsland: "+moment.deaths+" doden ("+moment.date+")"});
+				dag++;
+			}
+
+			dag = 43;
+			for (var i=1; i<data["China"].length; i++) {
+				moment = data["China"][i];
+				if(moment.deaths>0)
+					dataCN.push({x: dag+correctie, y: moment.deaths/(1439), toolTipContent: "China: "+moment.deaths+" doden ("+moment.date+")"});
 				dag++;
 			}
 
@@ -116,6 +134,22 @@
 					yValueFormatString: "##0",
 					showInLegend: true,
 					dataPoints: dataUS,
+				},
+				{
+					name: "Duitsland",
+					color: "black",
+					type: "spline",
+					yValueFormatString: "##0",
+					showInLegend: true,
+					dataPoints: dataDE,
+				},
+				{
+					name: "China",
+					color: "purple",
+					type: "spline",
+					yValueFormatString: "##0",
+					showInLegend: true,
+					dataPoints: dataCN,
 				}]
 			});
 			chart.render();
