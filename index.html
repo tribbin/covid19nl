@@ -14,6 +14,8 @@
 
 			var dataNL = [];
 			var dataIT = [];
+			var dataES = [];
+			var dataFR = [];
 			var dataUK = [];
 			var dataUS = [];
 			var dataDE = [];
@@ -37,6 +39,22 @@
 				moment = data["Netherlands"][i];
 				if(moment.deaths>0)
 					dataNL.push({x: dag+correctie, y: moment.deaths/(17.18), toolTipContent: "Nederland: "+moment.deaths+" doden ("+moment.date+")"});
+				dag++;
+			}
+
+			dag = 9;
+			for (var i=1; i<data["Spain"].length; i++) {
+				moment = data["Spain"][i];
+				if(moment.deaths>0)
+					dataES.push({x: dag+correctie, y: moment.deaths/(46.66), toolTipContent: "Spanje: "+moment.deaths+" doden ("+moment.date+")"});
+				dag++;
+			}
+
+			dag = 8;
+			for (var i=1; i<data["France"].length; i++) {
+				moment = data["France"][i];
+				if(moment.deaths>0)
+					dataFR.push({x: dag+correctie, y: moment.deaths/(66.99), toolTipContent: "Frankrijk: "+moment.deaths+" doden ("+moment.date+")"});
 				dag++;
 			}
 
@@ -113,11 +131,27 @@
 				},
 				{
 					name: "Nederland",
-					color: "orange",
+					color: "darkorange",
 					type: "spline",
 					yValueFormatString: "##0",
 					showInLegend: true,
 					dataPoints: dataNL,
+				},
+				{
+					name: "Spanje",
+					color: "pink",
+					type: "spline",
+					yValueFormatString: "##0",
+					showInLegend: true,
+					dataPoints: dataES,
+				},
+				{
+					name: "Frankrijk",
+					color: "darkcyan",
+					type: "spline",
+					yValueFormatString: "##0",
+					showInLegend: true,
+					dataPoints: dataFR,
 				},
 				{
 					name: "UK",
@@ -144,6 +178,7 @@
 					dataPoints: dataDE,
 				},
 				{
+					visible: false,
 					name: "China",
 					color: "purple",
 					type: "spline",

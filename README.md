@@ -12,8 +12,4 @@ Q: Waarom niet het aantal besmettingen?
 
 A: Door het tekort aan tests in de wereld zijn de officiële getallen niet betrouwbaar.
 
-Q: Waarom ziet alléén China er anders uit in de grafiek?
-
-A: https://www.youtube.com/watch?v=L3tnH4FGbd0
-
 Databron: https://github.com/pomber/covid19
