@@ -27,10 +27,19 @@
 			for (var i=1; i<data["Italy"].length; i++) {
 				moment = data["Italy"][i];
 				nlDate = new Date(moment.date);
-				nlDate.setDate(nlDate.getDate()+12);
+				nlDate.setDate(nlDate.getDate()+12); // Italië loopt 12 dagen voor op de ontwikkelingen in Nederland.
 				nlDateFormatted = nlDate.getFullYear() + "-" + (nlDate.getMonth()+1) + "-"+nlDate.getDate();
 				if(moment.deaths>0)
-					dataIT.push({x: dag+correctie, y: moment.deaths/(60.48), toolTipContent: "Italië: "+moment.deaths+" doden ("+moment.date+") --> prognose Nederland: " + parseInt(moment.deaths*(17.18/60.48)) + " doden (" + nlDateFormatted + ")" });
+					dataIT.push(
+						{
+							x: dag+correctie, // Tijdsverschuiving om de 'ramp-up' van de verschillende landen gelijk te maken.
+							y: moment.deaths/(60.48), // Gedeeld door het aantal miljoenen inwoners.
+							toolTipContent: "Italië: "+moment.deaths
+							+" doden ("+moment.date+") --> prognose Nederland: "
+							+ parseInt(moment.deaths*(17.18/60.48)) // Het aantal doden per miljoen inwoners in Italië als prognose voor Nederland.
+							+ " doden (" + nlDateFormatted + ")"
+						}
+					);
 				dag++;
 			}
 
@@ -86,7 +95,7 @@
 			for (var i=1; i<data["China"].length; i++) {
 				moment = data["China"][i];
 				if(moment.deaths>0)
-					dataCN.push({x: dag+correctie, y: moment.deaths/(1439), toolTipContent: "China: "+moment.deaths+" doden ("+moment.date+")"});
+					dataCN.push({x: dag+correctie, y: moment.deaths/(1439), toolTipContent: "China*: "+moment.deaths+" doden ("+moment.date+")"});
 				dag++;
 			}
 
@@ -184,7 +193,7 @@
 					dataPoints: dataDE,
 				},
 				{
-					name: "China",
+					name: "China*",
 					color: "brown",
 					type: "spline",
 					yValueFormatString: "##0",
@@ -209,5 +218,10 @@
 	<body>
 		<div id="chartContainer" style="height: 800px; width: 800px;"></div>
 		<script src="lib/canvasjs.min.js"></script>
+		<br /><br />
+		* De getallen m.b.t. China zijn niet betrouwbaar:<br />
+		<a href="https://nl.wikipedia.org/wiki/Coronapandemie#Kritiek_op_de_regionale_autoriteiten_in_China">https://nl.wikipedia.org/wiki/Coronapandemie#Kritiek_op_de_regionale_autoriteiten_in_China</a>
+		<br />
+		<a href="https://nl.wikipedia.org/wiki/Li_Wenliang">https://nl.wikipedia.org/wiki/Li_Wenliang</a>
 	</body>
 </html>
