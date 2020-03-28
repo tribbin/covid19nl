@@ -12,4 +12,8 @@ Q: Waarom niet het aantal besmettingen?
 
 A: Door het tekort aan tests in de wereld zijn de officiële getallen niet betrouwbaar.
 
+Q: Waarom ziet de groei-curve van China er 'anders' uit?
+
+A: https://nl.wikipedia.org/wiki/Coronapandemie#Kritiek_op_de_regionale_autoriteiten_in_China
+
 Databron: https://github.com/pomber/covid19
