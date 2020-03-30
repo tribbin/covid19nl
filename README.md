@@ -16,4 +16,8 @@ Q: Waarom ziet de groei-curve van China er 'anders' uit?
 
 A: https://nl.wikipedia.org/wiki/Coronapandemie#Kritiek_op_de_regionale_autoriteiten_in_China
 
+Q: Waarom heeft Spanje 'een slechte start'?
+
+A: https://www.youtube.com/watch?v=46724_yvBE4
+
 Databron: https://github.com/pomber/covid19
