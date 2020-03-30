@@ -21,6 +21,7 @@
 			var dataFR = []; // Frankrijk
 			var dataUK = []; // Verenigd Koninkrijk
 			var dataUS = []; // Amerika
+			var factorUS = []; // % verhoging
 			var dataDE = []; // Duitsland
 			var dataCN = []; // China
 
@@ -105,8 +106,16 @@
 			dag = 0;
 			for (var i=1; i<data["US"].length; i++) {
 				moment = data["US"][i];
-				if(moment.deaths>0)
+				factor = (moment.deaths / data["US"][i-1].deaths)-1;
+				if(moment.deaths>0) {
 					dataUS.push({x: dag+correctie, y: moment.deaths/(327.2), toolTipContent: "USA: "+moment.deaths+" doden ("+moment.date+")"});
+					factorUS.push(
+						{
+							x: dag+correctie,
+							y: factor
+						}
+					);
+				}
 				dag++;
 			}
 
@@ -273,7 +282,7 @@
 					type: "spline",
 					yValueFormatString: "+0.0%",
 					showInLegend: true,
-					dataPoints: factorIT,
+					dataPoints: factorIT
 				},
 				{
 					name: "Nederland",
@@ -281,7 +290,7 @@
 					type: "spline",
 					yValueFormatString: "+0.0%",
 					showInLegend: true,
-					dataPoints: factorNL,
+					dataPoints: factorNL
 				},
 				{
 					name: "Spanje",
@@ -290,6 +299,14 @@
 					yValueFormatString: "+0.0%",
 					showInLegend: true,
 					dataPoints: factorES
+				},
+				{
+					name: "USA",
+					color: "red",
+					type: "spline",
+					yValueFormatString: "+0.0%",
+					showInLegend: true,
+					dataPoints: factorUS
 				}]
 			});
 
@@ -303,6 +320,7 @@
 					e.dataSeries.visible = true;
 				}
 				chart.render();
+				chart2.render();
 			}
 		}
 		</script>
