@@ -4,7 +4,7 @@
 		<meta charset="UTF-8">
 		<script src="lib/jquery-1.11.1.min.js"></script>
 		<script>
-	
+
         	jQuery.getJSON("https://pomber.github.io/covid19/timeseries.json", function(data){
                 	maakGrafiek(data);
         	});
@@ -12,24 +12,28 @@
 
 		function maakGrafiek(data) {
 
-			var dataNL = [];
-			var dataIT = [];
-			var dataES = [];
-			var dataFR = [];
-			var dataUK = [];
-			var dataUS = [];
-			var dataDE = [];
-			var dataCN = [];
+			var dataNL = []; // Nederland
+			var factorNL = []; // % verhoging
+			var dataIT = []; // Italië
+			var factorIT = []; // % verhoging
+			var dataES = []; // Spanje
+			var factorES = []; // % verhoging
+			var dataFR = []; // Frankrijk
+			var dataUK = []; // Verenigd Koninkrijk
+			var dataUS = []; // Amerika
+			var dataDE = []; // Duitsland
+			var dataCN = []; // China
 
-			correctie = -50;
+			correctie = -50; // Gehele tijdlijn-verschuiving, nadat de individuele landen onderling zijn uitgelijnd.
 
-			dag = 19;
+			dag = 19; // De tijdlijn-verschuiving van een land.
 			for (var i=1; i<data["Italy"].length; i++) {
 				moment = data["Italy"][i];
+				factor = (moment.deaths / data["Italy"][i-1].deaths)-1;
 				nlDate = new Date(moment.date);
 				nlDate.setDate(nlDate.getDate()+12); // Italië loopt 12 dagen voor op de ontwikkelingen in Nederland.
 				nlDateFormatted = nlDate.getFullYear() + "-" + (nlDate.getMonth()+1) + "-"+nlDate.getDate();
-				if(moment.deaths>0)
+				if(moment.deaths>0) { // Negeer de tijd waarin er geen doden waren.
 					dataIT.push(
 						{
 							x: dag+correctie, // Tijdsverschuiving om de 'ramp-up' van de verschillende landen gelijk te maken.
@@ -40,22 +44,45 @@
 							+ " doden (" + nlDateFormatted + ")"
 						}
 					);
+					factorIT.push(
+						{
+							x: dag+correctie,
+							y: factor
+						}
+					);
+				}
 				dag++;
 			}
 
 			dag = 7;
 			for (var i=1; i<data["Netherlands"].length; i++) {
 				moment = data["Netherlands"][i];
-				if(moment.deaths>0)
+				factor = (moment.deaths / data["Netherlands"][i-1].deaths)-1;
+				if(moment.deaths>0) {
 					dataNL.push({x: dag+correctie, y: moment.deaths/(17.18), toolTipContent: "Nederland: "+moment.deaths+" doden ("+moment.date+")"});
+					factorNL.push(
+						{
+							x: dag+correctie,
+							y: factor
+						}
+					);
+				}
 				dag++;
 			}
 
 			dag = 9;
 			for (var i=1; i<data["Spain"].length; i++) {
 				moment = data["Spain"][i];
-				if(moment.deaths>0)
+				factor = (moment.deaths / data["Spain"][i-1].deaths)-1;
+				if(moment.deaths>0) {
 					dataES.push({x: dag+correctie, y: moment.deaths/(46.66), toolTipContent: "Spanje: "+moment.deaths+" doden ("+moment.date+")"});
+					factorES.push(
+						{
+							x: dag+correctie,
+							y: factor
+						}
+					);
+				}
 				dag++;
 			}
 
@@ -127,7 +154,7 @@
 					logarithmBase: 10,
 					labelFontSize: 20,
 					titleFontSize: 20
-				},
+					},
 				legend:{
 					cursor: "pointer",
 					fontSize: 30,
@@ -201,7 +228,72 @@
 					dataPoints: dataCN,
 				}]
 			});
+
 			chart.render();
+
+			var chart2 = new CanvasJS.Chart("chartContainer2", {
+				animationEnabled: true,
+				title:{
+					text: "Groeifactor.",
+					fontSize: 26
+				},
+				subtitles:[
+					{
+						text: "Robin van Westrenen",
+						fontSize: 12
+					}
+				],
+				axisX: {
+					minimum: 5,
+					title: "Start-momenten uitgelijnd.",
+					includeZero: true,
+					labelFontSize: 20,
+					titleFontSize: 20
+				},
+				axisY: {
+					minimum: 0,
+					maximum: 1,
+					title: "Procentuele groei sinds vorige dag.",
+					valueFormatString: "+0%",
+					includeZero: true,
+					labelFontSize: 20,
+					titleFontSize: 20
+					},
+				legend:{
+					cursor: "pointer",
+					fontSize: 30,
+					itemclick: toggleDataSeries
+				},
+				toolTip:{
+					shared: true
+				},
+				data: [{
+					name: "Italië",
+					color: "green",
+					type: "spline",
+					yValueFormatString: "+0.0%",
+					showInLegend: true,
+					dataPoints: factorIT,
+				},
+				{
+					name: "Nederland",
+					color: "darkorange",
+					type: "spline",
+					yValueFormatString: "+0.0%",
+					showInLegend: true,
+					dataPoints: factorNL,
+				},
+				{
+					name: "Spanje",
+					color: "pink",
+					type: "spline",
+					yValueFormatString: "+0.0%",
+					showInLegend: true,
+					dataPoints: factorES
+				}]
+			});
+
+			chart2.render();
 
 			function toggleDataSeries(e){
 				if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
@@ -216,12 +308,11 @@
 		</script>
 	</head>
 	<body>
-		<div id="chartContainer" style="height: 800px; width: 1200px;"></div>
 		<script src="lib/canvasjs.min.js"></script>
+		<div id="chartContainer" style="height: 800px; width: 1200px;"></div>
 		<br /><br />
-		* De getallen m.b.t. China zijn niet betrouwbaar:<br />
-		<a href="https://nl.wikipedia.org/wiki/Coronapandemie#Kritiek_op_de_regionale_autoriteiten_in_China">https://nl.wikipedia.org/wiki/Coronapandemie#Kritiek_op_de_regionale_autoriteiten_in_China</a>
-		<br />
-		<a href="https://nl.wikipedia.org/wiki/Li_Wenliang">https://nl.wikipedia.org/wiki/Li_Wenliang</a>
+		* De getallen m.b.t. China zijn niet betrouwbaar: <a href="https://nl.wikipedia.org/wiki/Coronapandemie#Kritiek_op_de_regionale_autoriteiten_in_China">https://nl.wikipedia.org/wiki/Coronapandemie#Kritiek_op_de_regionale_autoriteiten_in_China</a>
+		<br /><br />
+		<div id="chartContainer2" style="height: 800px; width: 1200px;"></div>
 	</body>
 </html>
