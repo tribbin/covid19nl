@@ -14,8 +14,10 @@
 
 			var dataNL = []; // Nederland
 			var factorNL = []; // % verhoging
+			var diffNL = []; // Verschil
 			var dataIT = []; // Italië
 			var factorIT = []; // % verhoging
+			var diffIT = []; // Verschil
 			var dataES = []; // Spanje
 			var factorES = []; // % verhoging
 			var dataFR = []; // Frankrijk
@@ -31,6 +33,7 @@
 			for (var i=1; i<data["Italy"].length; i++) {
 				moment = data["Italy"][i];
 				factor = (moment.deaths / data["Italy"][i-1].deaths)-1;
+				diff = moment.deaths - data["Italy"][i-1].deaths;
 				nlDate = new Date(moment.date);
 				nlDate.setDate(nlDate.getDate()+12); // Italië loopt 12 dagen voor op de ontwikkelingen in Nederland.
 				nlDateFormatted = nlDate.getFullYear() + "-" + (nlDate.getMonth()+1) + "-"+nlDate.getDate();
@@ -52,6 +55,13 @@
 							toolTipContent: "Italië: {y} doden ("+moment.date+")"
 						}
 					);
+					diffIT.push(
+						{
+							x: dag+correctie,
+							y: diff/60.48,
+							toolTipContent: "Italië: {y} nieuwe doden per miljoen inwoners ("+moment.date+")"
+						}
+					);
 				}
 				dag++;
 			}
@@ -60,6 +70,7 @@
 			for (var i=1; i<data["Netherlands"].length; i++) {
 				moment = data["Netherlands"][i];
 				factor = (moment.deaths / data["Netherlands"][i-1].deaths)-1;
+				diff = moment.deaths - data["Netherlands"][i-1].deaths;
 				if(moment.deaths>0) {
 					dataNL.push({x: dag+correctie, y: moment.deaths/(17.18), toolTipContent: "Nederland: "+moment.deaths+" doden ("+moment.date+")"});
 					factorNL.push(
@@ -67,6 +78,13 @@
 							x: dag+correctie,
 							y: factor,
 							toolTipContent: "Nederland: {y} doden ("+moment.date+")"
+						}
+					);
+					diffNL.push(
+						{
+							x: dag+correctie,
+							y: diff/17.18,
+							toolTipContent: "Nederland: {y} nieuwe doden per miljoen inwoners ("+moment.date+")"
 						}
 					);
 				}
@@ -160,11 +178,10 @@
 				},
 				axisY: {
 					minimum: 0.1,
-					title: "doden per miljoen inwoners (logaritmisch)",
+					title: "doden per miljoen inwoners",
 					valueFormatString: "#0.0",
-					logarithmic: true,
+					logarithmic: false,
 					includeZero: true,
-					logarithmBase: 10,
 					labelFontSize: 20,
 					titleFontSize: 20
 					},
@@ -316,6 +333,61 @@
 
 			chart2.render();
 
+			var chart3 = new CanvasJS.Chart("chartContainer3", {
+				animationEnabled: true,
+				title:{
+					text: "Nieuwe doden per miljoen inwoners.",
+					fontSize: 26
+				},
+				subtitles:[
+					{
+						text: "Robin van Westrenen",
+						fontSize: 12
+					}
+				],
+				axisX: {
+					minimum: 5,
+					title: "Start-momenten uitgelijnd.",
+					includeZero: true,
+					labelFontSize: 20,
+					titleFontSize: 20
+				},
+				axisY: {
+					minimum: 0,
+					title: "Doden op één dag per miljoen inwoners.",
+					valueFormatString: "0",
+					includeZero: true,
+					labelFontSize: 20,
+					titleFontSize: 20
+					},
+				legend:{
+					cursor: "pointer",
+					fontSize: 30,
+					itemclick: toggleDataSeries
+				},
+				toolTip:{
+					shared: true
+				},
+				data: [{
+					name: "Italië",
+					color: "green",
+					type: "column",
+					yValueFormatString: "0",
+					showInLegend: true,
+					dataPoints: diffIT
+				},
+				{
+					name: "Nederland",
+					color: "darkorange",
+					type: "column",
+					yValueFormatString: "0",
+					showInLegend: true,
+					dataPoints: diffNL
+				}]
+			});
+
+			chart3.render();
+
 			function toggleDataSeries(e){
 				if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
 					e.dataSeries.visible = false;
@@ -325,6 +397,7 @@
 				}
 				chart.render();
 				chart2.render();
+				chart3.render();
 			}
 		}
 		</script>
@@ -336,5 +409,7 @@
 		* De getallen m.b.t. China zijn niet betrouwbaar: <a href="https://nl.wikipedia.org/wiki/Coronapandemie#Kritiek_op_de_regionale_autoriteiten_in_China">https://nl.wikipedia.org/wiki/Coronapandemie#Kritiek_op_de_regionale_autoriteiten_in_China</a>
 		<br /><br />
 		<div id="chartContainer2" style="height: 800px; width: 1200px;"></div>
+		<br /><br />
+		<div id="chartContainer3" style="height: 800px; width: 1200px;"></div>
 	</body>
 </html>
