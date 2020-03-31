@@ -1,6 +1,18 @@
 <!DOCTYPE HTML>
 <html>
 	<head>  
+		<style>
+			body {
+				background: gray;
+				text-align: center;
+			}
+			body > div {
+				margin-top: 2em;
+				text-align: center;
+				display: inline-block;
+			}
+		</style>
+
 		<meta charset="UTF-8">
 		<script src="lib/jquery-1.11.1.min.js"></script>
 		<script>
@@ -15,16 +27,24 @@
 			var dataNL = []; // Nederland
 			var factorNL = []; // % verhoging
 			var diffNL = []; // Verschil
+
 			var dataIT = []; // Italië
 			var factorIT = []; // % verhoging
 			var diffIT = []; // Verschil
+
 			var dataES = []; // Spanje
 			var factorES = []; // % verhoging
+			var diffES = []; // Verschil
+
 			var dataFR = []; // Frankrijk
+
 			var dataUK = []; // Verenigd Koninkrijk
+
 			var dataUS = []; // Amerika
 			var factorUS = []; // % verhoging
+
 			var dataDE = []; // Duitsland
+
 			var dataCN = []; // China
 
 			correctie = -50; // Gehele tijdlijn-verschuiving, nadat de individuele landen onderling zijn uitgelijnd.
@@ -95,6 +115,7 @@
 			for (var i=1; i<data["Spain"].length; i++) {
 				moment = data["Spain"][i];
 				factor = (moment.deaths / data["Spain"][i-1].deaths)-1;
+				diff = moment.deaths - data["Spain"][i-1].deaths;
 				if(moment.deaths>0) {
 					dataES.push({x: dag+correctie, y: moment.deaths/(46.66), toolTipContent: "Spanje: "+moment.deaths+" doden ("+moment.date+")"});
 					factorES.push(
@@ -102,6 +123,13 @@
 							x: dag+correctie,
 							y: factor,
 							toolTipContent: "Spanje: {y} doden ("+moment.date+")"
+						}
+					);
+					diffES.push(
+						{
+							x: dag+correctie,
+							y: diff/46.66,
+							toolTipContent: "Spanje: {y} nieuwe doden per miljoen inwoners ("+moment.date+")"
 						}
 					);
 				}
@@ -180,8 +208,9 @@
 					minimum: 0.1,
 					title: "doden per miljoen inwoners",
 					valueFormatString: "#0.0",
-					logarithmic: false,
+					logarithmic: true,
 					includeZero: true,
+					logarithmBase: 10,
 					labelFontSize: 20,
 					titleFontSize: 20
 					},
@@ -383,6 +412,14 @@
 					yValueFormatString: "0",
 					showInLegend: true,
 					dataPoints: diffNL
+				},
+				{
+					name: "Spanje",
+					color: "pink",
+					type: "column",
+					yValueFormatString: "0",
+					showInLegend: true,
+					dataPoints: diffES
 				}]
 			});
 
