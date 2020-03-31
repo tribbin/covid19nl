@@ -18,6 +18,6 @@ A: https://nl.wikipedia.org/wiki/Coronapandemie#Kritiek_op_de_regionale_autorite
 
 Q: Waarom heeft Spanje 'een slechte start'?
 
-A: https://www.youtube.com/watch?v=46724_yvBE4
+A: https://youtu.be/46724_yvBE4?t=2586
 
 Databron: https://github.com/pomber/covid19
