@@ -41,6 +41,8 @@
 			var factorES = []; // % verhoging
 			var diffES = []; // Verschil
 
+			var dataSE = []; // Zweden
+
 			var dataFR = []; // Frankrijk
 
 			var dataUK = []; // Verenigd Koninkrijk
@@ -51,6 +53,12 @@
 			var dataDE = []; // Duitsland
 
 			var dataCN = []; // China
+
+			var dataKR = []; // Zuid Korea
+
+			var dataRU = []; // Rusland
+
+			var dataBR = []; // Brazilië
 
 			correctie = -50; // Gehele tijdlijn-verschuiving, nadat de individuele landen onderling zijn uitgelijnd.
 
@@ -141,6 +149,14 @@
 				dag++;
 			}
 
+			dag = 2;
+			for (var i=1; i<data["Sweden"].length; i++) {
+				moment = data["Sweden"][i];
+				if(moment.deaths>0)
+					dataSE.push({x: dag+correctie, y: moment.deaths/(10.23), toolTipContent: "Zweden: "+moment.deaths+" doden ("+moment.date+")"});
+				dag++;
+			}
+
 			dag = 8;
 			for (var i=1; i<data["France"].length; i++) {
 				moment = data["France"][i];
@@ -182,11 +198,35 @@
 				dag++;
 			}
 
+			dag = -18;
+			for (var i=1; i<data["Russia"].length; i++) {
+				moment = data["Russia"][i];
+				if(moment.deaths>0)
+					dataRU.push({x: dag+correctie, y: moment.deaths/(144.5), toolTipContent: "Rusland*: "+moment.deaths+" doden ("+moment.date+")"});
+				dag++;
+			}
+
+			dag = -10;
+			for (var i=1; i<data["Brazil"].length; i++) {
+				moment = data["Brazil"][i];
+				if(moment.deaths>0)
+					dataBR.push({x: dag+correctie, y: moment.deaths/(209.3), toolTipContent: "Brazilië*: "+moment.deaths+" doden ("+moment.date+")"});
+				dag++;
+			}
+
 			dag = 43;
 			for (var i=1; i<data["China"].length; i++) {
 				moment = data["China"][i];
 				if(moment.deaths>0)
 					dataCN.push({x: dag+correctie, y: moment.deaths/(1439), toolTipContent: "China*: "+moment.deaths+" doden ("+moment.date+")"});
+				dag++;
+			}
+
+			dag = 19;
+			for (var i=1; i<data["Korea, South"].length; i++) {
+				moment = data["Korea, South"][i];
+				if(moment.deaths>0)
+					dataKR.push({x: dag+correctie, y: moment.deaths/(51.47), toolTipContent: "Zuid Korea: "+moment.deaths+" doden ("+moment.date+")"});
 				dag++;
 			}
 
@@ -252,6 +292,14 @@
 					dataPoints: dataES,
 				},
 				{
+					name: "Zweden",
+					color: "blue",
+					type: "spline",
+					yValueFormatString: "##0",
+					showInLegend: true,
+					dataPoints: dataSE,
+				},
+				{
 					name: "Frankrijk",
 					color: "darkcyan",
 					type: "spline",
@@ -284,12 +332,36 @@
 					dataPoints: dataDE,
 				},
 				{
+					name: "Rusland",
+					color: "gray",
+					type: "spline",
+					yValueFormatString: "##0",
+					showInLegend: true,
+					dataPoints: dataRU,
+				},
+				{
+					name: "Brazilië",
+					color: "purple",
+					type: "spline",
+					yValueFormatString: "##0",
+					showInLegend: true,
+					dataPoints: dataBR,
+				},
+				{
 					name: "China*",
 					color: "brown",
 					type: "spline",
 					yValueFormatString: "##0",
 					showInLegend: true,
 					dataPoints: dataCN,
+				},
+				{
+					name: "Zuid Korea",
+					color: "gold",
+					type: "spline",
+					yValueFormatString: "##0",
+					showInLegend: true,
+					dataPoints: dataKR,
 				}]
 			});
 
